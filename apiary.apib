@@ -17,6 +17,8 @@ You must provide the `Authorization: Bearer {access_token}` header in all other 
 
 The current client ID and secret are [available here](http://pastebin.com/fX6ejAHd)
 
+The Attributes should be added as x-www-for-urlencoded body
+
 + Attributes
     + grant_type: `password` (string) - The type of oAuth grant. Always "password"
     + client_id: `abc` (string) - The oAuth client ID
@@ -52,29 +54,39 @@ Retrieve a list of your owned vehicles (includes vehicles not yet shipped!)
     + Body
 
             {
-              "response": [{
-                "color": null,
-                "display_name": null,
-                "id": 321,
-                "option_codes": "MS01,RENA,TM00,DRLH,PF00,BT85,PBCW,RFPO,WT19,IBMB,IDPB,TR00,SU01,SC01,TP01,AU01,CH00,HP00,PA00,PS00,AD02,X020,X025,X001,X003,X007,X011,X013",
-                "user_id": 123,
-                "vehicle_id": 1234567890,
-                "vin": "5YJSA1CN5CFP01657",
-                "tokens": ["x", "x"],
-                "state": "online"
-              }],
-              "count":1
+              "response": [
+                {
+                  "id": 4123241513431212,
+                  "vehicle_id": 143241231324,
+                  "vin": "4FADSFTQWER14231",
+                  "display_name": "MYTESLA",
+                  "option_codes": "FASD,RQWE,VXCZ,QREW,QEWR,
+                  "color": null,
+                  "tokens": [
+                    "abc123",
+                    "abc321"
+                  ],
+                  "state": "online",
+                  "id_s": "4123241513431212",
+                  "remote_start_enabled": true,
+                  "calendar_enabled": true,
+                  "notifications_enabled": true,
+                  "backseat_token": null,
+                  "backseat_token_updated_at": null
+                }
+              ],
+              "count": 1
             }
 
 
-## State and Settings [/api/1/vehicles/{vehicle_id}]
+## State and Settings [/api/1/vehicles/{id}]
 These resources are read-only and determine the state of the vehicle's various sub-systems.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
-## Mobile Access [GET /api/1/vehicles/{vehicle_id}/mobile_enabled]
+## Mobile Access [GET /api/1/vehicles/{id}/mobile_enabled]
 Determines if mobile access to the vehicle is enabled.
 
 + Request
@@ -94,7 +106,7 @@ Determines if mobile access to the vehicle is enabled.
                 "response": true
             }
 
-## Charge State [GET /api/1/vehicles/{vehicle_id}/data_request/charge_state]
+## Charge State [GET /api/1/vehicles/{id}/data_request/charge_state]
 Returns the state of charge in the battery.
 
 + Request
@@ -104,7 +116,7 @@ Returns the state of charge in the battery.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -112,24 +124,47 @@ Returns the state of charge in the battery.
 
             {
               "response": {
-                "charging_state": "Complete",  // "Charging", ??
-                "charge_to_max_range": false,  // current std/max-range setting
+                "charging_state": "Disconnected",
+                "charge_limit_soc": 90,
+                "charge_limit_soc_std": 90,
+                "charge_limit_soc_min": 50,
+                "charge_limit_soc_max": 100,
+                "charge_to_max_range": false,
+                "battery_heater_on": null,
+                "not_enough_power_to_heat": null,
                 "max_range_charge_counter": 0,
-                "fast_charger_present": false, // connected to Supercharger?
-                "battery_range": 239.02,       // rated miles
-                "est_battery_range": 155.79,   // range estimated from recent driving
-                "ideal_battery_range": 275.09, // ideal miles
-                "battery_level": 91,           // integer charge percentage
-                "battery_current": -0.6,       // current flowing into battery
-                "charge_starting_range": null,
-                "charge_starting_soc": null,
-                "charger_voltage": 0,          // only has value while charging
-                "charger_pilot_current": 40,   // max current allowed by charger & adapter
-                "charger_actual_current": 0,   // current actually being drawn
-                "charger_power": 0,            // kW (rounded down) of charger
-                "time_to_full_charge": null,   // valid only while charging
-                "charge_rate": -1.0,           // float mi/hr charging or -1 if not charging
-                "charge_port_door_open": true
+                "fast_charger_present": null,
+                "fast_charger_type": "<invalid>",
+                "battery_range": 212.55,
+                "est_battery_range": 128.99,
+                "ideal_battery_range": 170.04,
+                "battery_level": 67,
+                "usable_battery_level": 67,
+                "battery_current": null,
+                "charge_energy_added": 1.78,
+                "charge_miles_added_rated": 7,
+                "charge_miles_added_ideal": 5.5,
+                "charger_voltage": null,
+                "charger_pilot_current": null,
+                "charger_actual_current": null,
+                "charger_power": null,
+                "time_to_full_charge": 0,
+                "trip_charging": null,
+                "charge_rate": 0,
+                "charge_port_door_open": null,
+                "motorized_charge_port": false,
+                "scheduled_charging_start_time": null,
+                "scheduled_charging_pending": false,
+                "user_charge_enable_request": null,
+                "charge_enable_request": true,
+                "eu_vehicle": true,
+                "charger_phases": null,
+                "charge_port_latch": "<invalid>",
+                "charge_current_request": 16,
+                "charge_current_request_max": 16,
+                "managed_charging_active": false,
+                "managed_charging_user_canceled": false,
+                "managed_charging_start_time": null
               }
             }
 
@@ -398,7 +433,7 @@ Set the charge mode to max range (100% under the new percentage system introduce
               }
             }
 
-## Set Charge Limit [POST /api/1/vehicles/{vehicle_id}/command/set_charge_limit?percent={limit_value}]
+## Set Charge Limit [POST /api/1/vehicles/{d}/command/set_charge_limit]
 Set the charge limit to a custom percentage.
 
 + Request
@@ -407,10 +442,11 @@ Set the charge limit to a custom percentage.
             Authorization: Bearer {access_token}
 
 + Parameters
-
-    + vehicle_id: `1` (number) - The id of the Vehicle.
-    + limit_value: `75` (number) - The percentage value
-
+    + id: `1` (number) - The id of the Vehicle.
+    
++Atributes
+    +limit_value: `75` (number) - The percentage value
+    
 + Response 200 (application/json)
 
     + Body
