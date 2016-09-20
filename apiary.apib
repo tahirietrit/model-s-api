@@ -60,7 +60,7 @@ Retrieve a list of your owned vehicles (includes vehicles not yet shipped!)
                   "vehicle_id": 143241231324,
                   "vin": "4FADSFTQWER14231",
                   "display_name": "MYTESLA",
-                  "option_codes": "FASD,RQWE,VXCZ,QREW,QEWR,
+                  "option_codes": "AFSD,EQWQ,EWQE,TWER,WREW,
                   "color": null,
                   "tokens": [
                     "abc123",
@@ -96,7 +96,7 @@ Determines if mobile access to the vehicle is enabled.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -168,7 +168,7 @@ Returns the state of charge in the battery.
               }
             }
 
-## Climate Settings [GET /api/1/vehicles/{vehicle_id}/data_request/climate_state]
+## Climate Settings [GET /api/1/vehicles/{id}/data_request/climate_state]
 Returns the current temperature and climate control state.
 
 + Request
@@ -178,26 +178,34 @@ Returns the current temperature and climate control state.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
     + Body
 
-            {
+           {
               "response": {
-                "inside_temp": 17.0,          // degC inside car
-                "outside_temp": 9.5,          // degC outside car or null
-                "driver_temp_setting": 22.6,  // degC of driver temperature setpoint
-                "passenger_temp_setting": 22.6, // degC of passenger temperature setpoint
-                "is_auto_conditioning_on": false, // apparently even if on
-                "is_front_defroster_on": null, // null or boolean as integer?
+                "inside_temp": 23.3,
+                "outside_temp": 16.5,
+                "driver_temp_setting": 23,
+                "passenger_temp_setting": 23,
+                "is_auto_conditioning_on": false,
+                "is_front_defroster_on": 3,
                 "is_rear_defroster_on": false,
-                "fan_status": 0               // fan speed 0-6 or null
-              }
+                "fan_status": 0,
+                "seat_heater_left": 0,
+                "seat_heater_right": 0,
+                "seat_heater_rear_left": 0,
+                "seat_heater_rear_right": 0,
+                "seat_heater_rear_center": 0,
+                "seat_heater_rear_right_back": 0,
+                "seat_heater_rear_left_back": 0,
+                "smart_preconditioning": false
+             }
             }
 
-## Driving and Position [GET /api/1/vehicles/{vehicle_id}/data_request/drive_state]
+## Driving and Position [GET /api/1/vehicles/{id}/data_request/drive_state]
 Returns the driving and position state of the vehicle.
 
 + Request
@@ -207,7 +215,7 @@ Returns the driving and position state of the vehicle.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -224,7 +232,7 @@ Returns the driving and position state of the vehicle.
               }
             }
 
-## GUI Settings [GET /api/1/vehicles/{vehicle_id}/data_request/gui_settings]
+## GUI Settings [GET /api/1/vehicles/{id}/data_request/gui_settings]
 Returns various information about the GUI settings of the car, such as unit format and range display.
 
 + Request
@@ -234,7 +242,7 @@ Returns various information about the GUI settings of the car, such as unit form
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -250,7 +258,7 @@ Returns various information about the GUI settings of the car, such as unit form
               }
             }
 
-## Vehicle State [GET /api/1/vehicles/{vehicle_id}/data_request/vehicle_state]
+## Vehicle State [GET /api/1/vehicles/{id}/data_request/vehicle_state]
 Returns the vehicle's physical state, such as which doors are open.
 
 + Request
@@ -260,7 +268,7 @@ Returns the vehicle's physical state, such as which doors are open.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -268,29 +276,51 @@ Returns the vehicle's physical state, such as which doors are open.
 
             {
               "response": {
-                "df": false,                  // driver's side front door open
-                "dr": false,                  // driver's side rear door open
-                "pf": false,                  // passenger's side front door open
-                "pr": false,                  // passenger's side rear door open
-                "ft": false,                  // front trunk is open
-                "rt": false,                  // rear trunk is open
-                "car_verson": "1.19.42",      // car firmware version
-                "locked": true,               // car is locked
-                "sun_roof_installed": false,  // panoramic roof is installed
-                "sun_roof_state": "unknown",
-                "sun_roof_percent_open": 0,   // null if not installed
-                "dark_rims": false,           // gray rims installed
-                "wheel_type": "Base19",       // wheel type installed
-                "has_spoiler": false,         // spoiler is installed
-                "roof_color": "Colored",      // "None" for panoramic roof
-                "perf_config": "Base"
-              }
+                    "api_version": 3,
+                    "autopark_state": "unavailable",
+                    "autopark_state_v2": "ready",
+                    "autopark_style": "dead_man",
+                    "calendar_supported": true,
+                    "car_type": "s",
+                    "car_version": "2.32.100",
+                    "center_display_state": 0,
+                    "dark_rims": false,
+                    "df": 0,
+                    "dr": 0,
+                    "exterior_color": "Pearl",
+                    "ft": 0,
+                    "has_spoiler": true,
+                    "homelink_nearby": false,
+                    "last_autopark_error": "no_error",
+                    "locked": true,
+                    "notifications_supported": true,
+                    "odometer": 11378.988329,
+                    "parsed_calendar_supported": true,
+                    "perf_config": "P2",
+                    "pf": 0,
+                    "pr": 0,
+                    "rear_seat_heaters": 0,
+                    "remote_start": false,
+                    "remote_start_supported": true,
+                    "rhd": false,
+                    "roof_color": "None",
+                    "rt": 0,
+                    "seat_type": 1,
+                    "spoiler_type": "Passive",
+                    "sun_roof_installed": 2,
+                    "sun_roof_percent_open": 0,
+                    "sun_roof_state": "unknown",
+                    "third_row_seats": "None",
+                    "valet_mode": false,
+                    "vehicle_name": "The Beast",
+                    "wheel_type": "Super21Gray"
+                  }
             }
 
 # Group Vehicle Commands
 These commands alter the vehicles state, and return result (true/false) to indicate success, and if failure reason contains the cause of failure.
 
-## Wake Up Car [POST /api/1/vehicles/{vehicle_id}/wake_up]
+## Wake Up Car [POST /api/1/vehicles/{id}/wake_up]
 Wakes up the car from the sleep state. Necessary to get some data from the car.
 
 + Request
@@ -300,7 +330,7 @@ Wakes up the car from the sleep state. Necessary to get some data from the car.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -313,7 +343,7 @@ Wakes up the car from the sleep state. Necessary to get some data from the car.
               }
             }
 
-## Set Valet Mode [POST /api/1/vehicles/{vehicle_id}/command/set_valet_mode]
+## Set Valet Mode [POST /api/1/vehicles/{id}/command/set_valet_mode]
 Sets valet mode on or off with a PIN to disable it from within the car. Reuses last PIN from previous valet session.
 Valet Mode limits the car's top speed to 70MPH and 80kW of acceleration power. It also disables Homelink, Bluetooth and
 Wifi settings, and the ability to disable mobile access to the car. It also hides your favorites, home, and work
@@ -326,7 +356,9 @@ locations in navigation.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
+
++Atributes
     + on: true (boolean) - Whether to enable or disable valet mode.
     + password: 1234 (number) - (optional) A 4 digit PIN code to unlock the car.
 
@@ -341,7 +373,7 @@ locations in navigation.
               }
             }
 
-## Reset Valet PIN [POST /api/1/vehicles/{vehicle_id}/command/reset_valet_pin]
+## Reset Valet PIN [POST /api/1/vehicles/{id}/command/reset_valet_pin]
 Resets the PIN set for valet mode, if set.
 
 + Request
@@ -351,7 +383,7 @@ Resets the PIN set for valet mode, if set.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -364,7 +396,7 @@ Resets the PIN set for valet mode, if set.
               }
             }
 
-## Open Charge Port [POST /api/1/vehicles/{vehicle_id}/command/charge_port_door_open]
+## Open Charge Port [POST /api/1/vehicles/{id}/command/charge_port_door_open]
 Opens the charge port. Does not close the charge port (for now...)
 
 + Request
@@ -387,7 +419,7 @@ Opens the charge port. Does not close the charge port (for now...)
               }
             }
 
-## Set Charge Limit to Standard [POST /api/1/vehicles/{vehicle_id}/command/charge_standard]
+## Set Charge Limit to Standard [POST /api/1/vehicles/{id}/command/charge_standard]
 Set the charge mode to standard (90% under the new percentage system introduced in 4.5).
 
 + Request
@@ -397,7 +429,7 @@ Set the charge mode to standard (90% under the new percentage system introduced 
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -410,7 +442,7 @@ Set the charge mode to standard (90% under the new percentage system introduced 
               }
             }
 
-## Set Charge Limit to Max Range [POST /api/1/vehicles/{vehicle_id}/command/charge_max_range]
+## Set Charge Limit to Max Range [POST /api/1/vehicles/{id}/command/charge_max_range]
 Set the charge mode to max range (100% under the new percentage system introduced in 4.5). Use sparingly!
 
 + Request
@@ -420,7 +452,7 @@ Set the charge mode to max range (100% under the new percentage system introduce
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -458,7 +490,7 @@ Set the charge limit to a custom percentage.
               }
             }
 
-## Start Charging [POST /api/1/vehicles/{vehicle_id}/command/charge_start]
+## Start Charging [POST /api/1/vehicles/{id}/command/charge_start]
 Start charging. Must be plugged in, have power available, and not have reached your charge limit.
 
 + Request
@@ -468,7 +500,7 @@ Start charging. Must be plugged in, have power available, and not have reached y
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -481,7 +513,7 @@ Start charging. Must be plugged in, have power available, and not have reached y
               }
             }
 
-## Stop Charging [POST /api/1/vehicles/{vehicle_id}/command/charge_stop]
+## Stop Charging [POST /api/1/vehicles/{id}/command/charge_stop]
 Stop charging. Must already be charging.
 
 + Request
@@ -491,7 +523,7 @@ Stop charging. Must already be charging.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -504,7 +536,7 @@ Stop charging. Must already be charging.
               }
             }
 
-## Flash Lights [POST /api/1/vehicles/{vehicle_id}/command/flash_lights]
+## Flash Lights [POST /api/1/vehicles/{id}/command/flash_lights]
 Flash the lights once.
 
 + Request
@@ -514,7 +546,7 @@ Flash the lights once.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -527,7 +559,7 @@ Flash the lights once.
               }
             }
 
-## Honk Horn [POST /api/1/vehicles/{vehicle_id}/command/honk_horn]
+## Honk Horn [POST /api/1/vehicles/{id}/command/honk_horn]
 Honk the horn once.
 
 + Request
@@ -537,7 +569,7 @@ Honk the horn once.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -550,7 +582,7 @@ Honk the horn once.
               }
             }
 
-## Unlock Doors [POST /api/1/vehicles/{vehicle_id}/command/door_unlock]
+## Unlock Doors [POST /api/1/vehicles/{id}/command/door_unlock]
 Unlock the car's doors.
 
 + Request
@@ -560,7 +592,7 @@ Unlock the car's doors.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -573,7 +605,7 @@ Unlock the car's doors.
               }
             }
 
-## Lock Doors [POST /api/1/vehicles/{vehicle_id}/command/door_lock]
+## Lock Doors [POST /api/1/vehicles/{id}/command/door_lock]
 Lock the car's doors.
 
 + Request
@@ -583,7 +615,7 @@ Lock the car's doors.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -596,7 +628,7 @@ Lock the car's doors.
               }
             }
 
-## Set Temperature [POST /api/1/vehicles/{vehicle_id}/command/set_temps?driver_temp={driver_degC}&passenger_temp={pass_degC}]
+## Set Temperature [POST /api/1/vehicles/{id}/command/set_temps]
 Set the temperature target for the HVAC system.
 
 + Request
@@ -606,7 +638,9 @@ Set the temperature target for the HVAC system.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
+
++Attributes
     + driver_degC: `23.7` (number) - The desired temperature on the driver's side in celcius.
     + pass_degC: `18.1` (number) - The desired temperature on the passenger's side in celcius.
 
@@ -621,7 +655,7 @@ Set the temperature target for the HVAC system.
               }
             }
 
-## Start HVAC System [POST /api/1/vehicles/{vehicle_id}/command/auto_conditioning_start]
+## Start HVAC System [POST /api/1/vehicles/{id}/command/auto_conditioning_start]
 Start the climate control system. Will cool or heat automatically, depending on set temperature.
 
 + Request
@@ -631,7 +665,7 @@ Start the climate control system. Will cool or heat automatically, depending on 
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -644,7 +678,7 @@ Start the climate control system. Will cool or heat automatically, depending on 
               }
             }
 
-## Stop HVAC System  [POST /api/1/vehicles/{vehicle_id}/command/auto_conditioning_stop]
+## Stop HVAC System  [POST /api/1/vehicles/{id}/command/auto_conditioning_stop]
 Stop the climate control system.
 
 + Request
@@ -654,7 +688,7 @@ Stop the climate control system.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
 
 + Response 200 (application/json)
 
@@ -667,7 +701,7 @@ Stop the climate control system.
               }
             }
 
-## Move Pano Roof [POST /api/1/vehicles/{vehicle_id}/command/sun_roof_control?state={state}&percent={percent}]
+## Move Pano Roof [POST /api/1/vehicles/{id}/command/sun_roof_control]
 Controls the car's panoramic roof, if installed.
 
 + Request
@@ -677,7 +711,9 @@ Controls the car's panoramic roof, if installed.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
+
++Attributes
     + state: `open` (enum[string])
         The desired state of the panoramic roof. The approximate percent open values for each state are `open` = 100%, `close` = 0%, `comfort` = 80%, and `vent` = ~15%
         + Members
@@ -699,7 +735,7 @@ Controls the car's panoramic roof, if installed.
               }
             }
 
-## Remote Start [POST /api/1/vehicles/{vehicle_id}/command/remote_start_drive?password={password}]
+## Remote Start [POST /api/1/vehicles/{id}/command/remote_start_drive]
 Start the car for keyless driving. Must start driving within 2 minutes of issuing this request.
 
 + Request
@@ -709,7 +745,9 @@ Start the car for keyless driving. Must start driving within 2 minutes of issuin
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
+
++Attributes
     + password: `edisonsux` (string) - The password to the authenticated my.teslamotors.com account.
 
 + Response 200 (application/json)
@@ -723,7 +761,7 @@ Start the car for keyless driving. Must start driving within 2 minutes of issuin
               }
             }
 
-## Open Trunk/Frunk [POST /api/1/vehicles/{vehicle_id}/command/trunk_open]
+## Open Trunk/Frunk [POST /api/1/vehicles/{id}/command/trunk_open]
 Open the trunk or frunk. Currently inoperable.
 
 + Request
@@ -733,7 +771,9 @@ Open the trunk or frunk. Currently inoperable.
 
 + Parameters
 
-    + vehicle_id: `1` (number) - The id of the Vehicle.
+    + id: `1` (number) - The id of the Vehicle.
+    
++Attributes
     + which_trunk: `rear` (string) - The trunk to open. `rear` is the only one known currently.
 
 + Response 200 (application/json)
